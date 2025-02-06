@@ -17,14 +17,14 @@ namespace WordFlowServer
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            //builder.Services.AddDbContext<DataContext>(options =>
-            //{
-            //    //Microsoft.EntityFrameworkCore.SqlServer package is necessery
-            //    options.UseSqlServer(builder.Configuration.GetConnectionString("BasicConnection"));
-            //});
-
             builder.Services.AddDbContext<DataContext>(options =>
-                options.UseInMemoryDatabase("TestDatabase"));
+            {
+                //Microsoft.EntityFrameworkCore.SqlServer package is necessery
+                options.UseSqlServer(builder.Configuration.GetConnectionString("BasicConnection"));
+            });
+
+            //builder.Services.AddDbContext<DataContext>(options =>
+            //    options.UseInMemoryDatabase("TestDatabase"));
 
             var app = builder.Build();
 
