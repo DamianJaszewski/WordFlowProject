@@ -23,11 +23,12 @@ a:hover {
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    margin: 0;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+    font-family: "Poppins" !important;
+    background: linear-gradient(to bottom, #87C6D8, #D1D6DC, #F2B5B3);
 }
 
 h1 {
@@ -65,4 +66,17 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.table-striped tr:nth-child(odd) {
+    background: transparent !important;
+}
+
+th, td {
+    background: transparent !important;
+    border: 4px solid black;
+}
+
+.table-striped tr:nth-child(even) {
+    background: transparent !important;
 }

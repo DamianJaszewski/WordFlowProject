@@ -8,6 +8,9 @@ namespace WordFlowServer
     {
         public static void Main(string[] args)
         {
+            // Add allow CORS
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -26,6 +29,18 @@ namespace WordFlowServer
             //builder.Services.AddDbContext<DataContext>(options =>
             //    options.UseInMemoryDatabase("TestDatabase"));
 
+            // Cors services
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                      });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -34,6 +49,9 @@ namespace WordFlowServer
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            // Use Cors
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseHttpsRedirection();
 
