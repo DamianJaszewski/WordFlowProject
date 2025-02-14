@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -41,6 +42,9 @@ namespace WordFlowServer
                       });
             });
 
+            builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+                .AddEntityFrameworkStores<DataContext>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -52,6 +56,8 @@ namespace WordFlowServer
 
             // Use Cors
             app.UseCors(MyAllowSpecificOrigins);
+
+            app.MapIdentityApi<IdentityUser>();
 
             app.UseHttpsRedirection();
 
