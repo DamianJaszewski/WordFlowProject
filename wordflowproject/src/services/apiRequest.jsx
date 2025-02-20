@@ -9,7 +9,7 @@
 
 export const apiRequest = async (endpoint, { method = "GET", body, params = {} } = {}) => {
 
-    const API_BASE_URL = "https://localhost:7021";
+    const API_BASE_URL = "https://localhost:44335";
 
     const config = {
         method,

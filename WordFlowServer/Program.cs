@@ -1,4 +1,4 @@
-
+﻿
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -36,9 +36,10 @@ namespace WordFlowServer
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
+                          policy.WithOrigins("https://localhost:5173") // Dokładny adres Twojego frontendu
+                             .AllowAnyMethod() // Zezwól na wszystkie metody (GET, POST itd.)
+                             .AllowAnyHeader() // Zezwól na dowolne nagłówki
+                             .AllowCredentials(); // Zezwól na dołączanie ciasteczek do zapytań
                       });
             });
 
