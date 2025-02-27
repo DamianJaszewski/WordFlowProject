@@ -2,11 +2,11 @@
 import { useEffect, useState } from 'react';
 import { Form, Modal } from "react-bootstrap";
 import { ContainerWrapper, InputWrapper, CustomButton, CustomTable } from "../components";
-import { myTaskService } from "../services/myTaskService";
+import { cardService } from "../services/cardService";
 
 function Home() {
 
-    const initialTaskState = { id: 0, labelId: 0, title: '', description: '' };
+    const initialTaskState = { id: 0, labelId: 0, title: '', question: '' };
     const [myTasks, setMyTasks] = useState();
     const [newTask, setNewTask] = useState(initialTaskState);
     const [showModal, setShowModal] = useState(false);
@@ -19,7 +19,7 @@ function Home() {
     }, []);
 
     const handleTaskData = async () => {
-        const data = await myTaskService.getTasks();
+        const data = await cardService.getCards();
         setMyTasks(data);
     }
 
@@ -39,22 +39,22 @@ function Home() {
         e.preventDefault();
         if (isEditing) {
             console.log(newTask.id);
-            await myTaskService.updateTask(newTask);
+            await cardService.updateTask(newTask);
         } else {
-            await myTaskService.createTask(newTask);
+            await cardService.createTask(newTask);
         }
         await handleTaskData(); // Odśwież listę zadań
         handleModalToggle();
     };
 
     const handleDeleteTask = async (task) => {
-        await myTaskService.deleteTask(task.id)
+        await cardService.deleteTask(task.id)
         await handleTaskData();
     };
 
     const columns = [
         { header: "Tytuł", field: "title" },
-        { header: "Szczegóły", field: "description" }
+        { header: "Szczegóły", field: "question" }
     ];
 
     const actions = [
