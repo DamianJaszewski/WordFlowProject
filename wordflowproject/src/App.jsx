@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navigation from "./components/Navigation";
 import Account from './pages/Account';
+import Learn from './pages/Learn'
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="account" element={<Account />} />
+                <Route path="learn" element={<Learn />} />
             </Routes>
         </BrowserRouter>
     );

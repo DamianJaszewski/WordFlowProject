@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.TestHost;
+using NuGet.ContentModel;
 using WordFlowServer;
+using WordFlowServer.Models;
 
 namespace WordFlowTest.Controllers
 {
@@ -28,7 +30,27 @@ namespace WordFlowTest.Controllers
         [Fact]
         public async Task GetRandomTask_ReturnOk()
         {
-            var response = await _client.GetAsync("/tag/populate");
+            var response = await _client.GetAsync("/api/Cards/Random");
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task GetRandomTask_ShouldReturnCard()
+        {
+            // Arrange: Dodaj kilka kart do bazy danych
+            var card1 = new Card() { Title = "", Question = "First", Answer = "Answer" };
+            var card2 = new Card() { Title = "", Question = "Second", Answer = "Answer" };
+
+            _context.Card.AddRange(card1, card2);
+            await _context.SaveChangesAsync();
+
+            // Act: Pobierz losową kartę
+            var response = await _client.GetFromJsonAsync<Card>("/api/Cards/Random");
+
+            // Assert
+            Assert.NotNull(response);
+            Assert.Contains(response.Id, new[] { card1.Id, card2.Id });
         }
     }
 }

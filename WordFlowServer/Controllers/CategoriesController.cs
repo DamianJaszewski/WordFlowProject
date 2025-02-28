@@ -5,7 +5,7 @@ using WordFlowServer.Models;
 
 namespace WordFlowServer.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {

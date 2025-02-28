@@ -5,6 +5,8 @@ export const cardService = {
 
     getCards: () => apiRequest("/api/Cards/"),
 
+    getRandomCard: () => apiRequest("/api/Cards/Random"), 
+
     //createTask: (task) => apiRequest("/api/MyTasks/", { method: "POST", body: task }),
 
     //updateTask: (task) =>

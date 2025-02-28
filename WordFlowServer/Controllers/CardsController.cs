@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WordFlowServer;
+using NuGet.Versioning;
+using System.Net.WebSockets;
 using WordFlowServer.Models;
 
 namespace WordFlowServer.Controllers
@@ -23,9 +19,21 @@ namespace WordFlowServer.Controllers
 
         // GET: api/Cards
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Card>>> GetCard()
+        public async Task<ActionResult<IEnumerable<Card>>> GetCards()
         {
             return await _context.Card.ToListAsync();
+        }
+
+        // GET: api/Cards/Random
+        [HttpGet("Random")]
+        public async Task<ActionResult<Card>> GetRandomCard()
+        {
+            var cards = await _context.Card.ToListAsync();
+
+            var random = new Random();
+            var output = cards.ElementAt(random.Next(cards.Count));
+
+            return output;
         }
 
         // GET: api/Cards/5
