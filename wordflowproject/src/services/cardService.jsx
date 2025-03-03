@@ -7,10 +7,10 @@ export const cardService = {
 
     getRandomCard: () => apiRequest("/api/Cards/Random"), 
 
-    //createTask: (task) => apiRequest("/api/MyTasks/", { method: "POST", body: task }),
+    createCard: (card) => apiRequest("/api/Cards/", { method: "POST", body: card }),
 
-    //updateTask: (task) =>
-    //    apiRequest(`/api/MyTasks/${task.id}`, { method: "PUT", body: task }),
+    updateCard: (card) =>
+        apiRequest(`/api/Cards/${card.id}`, { method: "PUT", body: card }),
 
-    //deleteTask: (id) => apiRequest(`/api/MyTasks/${id}`, { method: "DELETE" }),
+    deleteCard: (id) => apiRequest(`/api/Cards/${id}`, { method: "DELETE" }),
 };

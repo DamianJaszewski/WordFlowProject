@@ -6,11 +6,12 @@ import { cardService } from "../services/cardService";
 
 function Home() {
 
-    const initialTaskState = { id: 0, labelId: 0, title: '', question: '' };
+    const initialCardState = { id: 0, labelId: 0, title: '', question: '', answer: '' };
     const [randomCard, setRandomCard] = useState();
-    const [newTask, setNewTask] = useState(initialTaskState);
+    const [newTask, setNewTask] = useState(initialCardState);
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
 
     const handleModalToggle = () => setShowModal(!showModal);
 
@@ -25,7 +26,7 @@ function Home() {
     }
 
     const handleNewTask = () => {
-        setNewTask(initialTaskState);
+        setNewTask(initialCardState);
         setIsEditing(false);
         setShowModal(true);
     }
@@ -40,9 +41,9 @@ function Home() {
         e.preventDefault();
         if (isEditing) {
             console.log(newTask.id);
-            await cardService.updateTask(newTask);
+            await cardService.updateCard(newTask);
         } else {
-            await cardService.createTask(newTask);
+            await cardService.createCard(newTask);
         }
         await handleTaskData(); // Odśwież listę zadań
         handleModalToggle();
@@ -75,7 +76,6 @@ function Home() {
                         <div className="d-flex mb-3 gap-3" style={{flexWrap: "wrap"}}>
                         <InputWrapper
                             controlId="formTitle"
-                            title="Tytuł"
                             type="text"
                             placeholder="Tytuł"
                             value={newTask.title}
@@ -84,11 +84,18 @@ function Home() {
                         />
                         <InputWrapper
                             controlId="formDescription"
-                            title="Description"
                             type="text"
-                            placeholder="Szczegóły"
-                            value={newTask.description}
-                            onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                            placeholder="Pytanie"
+                            value={newTask.question}
+                            onChange={(e) => setNewTask({ ...newTask, question: e.target.value })}
+                            className="flex-fill"
+                        />
+                        <InputWrapper
+                            controlId="formDescription"
+                            type="text"
+                            placeholder="Odpowiedź"
+                            value={newTask.answer}
+                            onChange={(e) => setNewTask({ ...newTask, answer: e.target.value })}
                             className="flex-fill"
                         />
                         </div>
@@ -96,19 +103,28 @@ function Home() {
                     </Form>
                 </Modal.Body>
             </Modal>
-            {randomCard ? (
+            {randomCard && (
                 <div>
-                    <div>
-                        {randomCard.title}
-                    </div>
-                    <div>
-                        {randomCard.question}
-                    </div>
-                    <div>
-                        {randomCard.answer}
-                    </div>
+                    <h3>{randomCard.title}</h3>
+                    <div>{randomCard.question}</div>
                 </div>
-            ) : null}
+            )}
+
+            <div
+                style={{ cursor: "pointer" }}
+                className="relative w-64 h-32 bg-gray-200 border border-gray-300 rounded-xl overflow-hidden"
+                onClick={() => setIsVisible(!isVisible)}
+            >
+                {!isVisible ? (
+                    <div>
+                        <span className="text-xl text-gray-700 font-semibold">Pokaż</span>
+                    </div>
+                ):
+                    <div>
+                        <p className="text-lg text-gray-900">{randomCard?.answer ?? "Brak odpowiedzi"}</p>
+                    </div>
+                }
+            </div>
         </ContainerWrapper>
     )
 }

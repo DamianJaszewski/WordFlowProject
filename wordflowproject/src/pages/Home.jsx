@@ -6,9 +6,9 @@ import { cardService } from "../services/cardService";
 
 function Home() {
 
-    const initialTaskState = { id: 0, labelId: 0, title: '', question: '' };
+    const initialCardState = { id: 0, categoryId: 0, title: '', question: '', answer: '' };
     const [myTasks, setMyTasks] = useState();
-    const [newTask, setNewTask] = useState(initialTaskState);
+    const [newTask, setNewTask] = useState(initialCardState);
     const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -24,7 +24,7 @@ function Home() {
     }
 
     const handleNewTask = () => {
-        setNewTask(initialTaskState);
+        setNewTask(initialCardState);
         setIsEditing(false);
         setShowModal(true);
     }
@@ -39,16 +39,16 @@ function Home() {
         e.preventDefault();
         if (isEditing) {
             console.log(newTask.id);
-            await cardService.updateTask(newTask);
+            await cardService.updateCard(newTask);
         } else {
-            await cardService.createTask(newTask);
+            await cardService.createCard(newTask);
         }
         await handleTaskData(); // Odśwież listę zadań
         handleModalToggle();
     };
 
     const handleDeleteTask = async (task) => {
-        await cardService.deleteTask(task.id)
+        await cardService.deleteCard(task.id)
         await handleTaskData();
     };
 
@@ -74,7 +74,6 @@ function Home() {
                         <div className="d-flex mb-3 gap-3" style={{flexWrap: "wrap"}}>
                         <InputWrapper
                             controlId="formTitle"
-                            title="Tytuł"
                             type="text"
                             placeholder="Tytuł"
                             value={newTask.title}
@@ -83,11 +82,18 @@ function Home() {
                         />
                         <InputWrapper
                             controlId="formDescription"
-                            title="Description"
                             type="text"
-                            placeholder="Szczegóły"
-                            value={newTask.description}
-                            onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                            placeholder="Pytanie"
+                            value={newTask.question}
+                            onChange={(e) => setNewTask({ ...newTask, question: e.target.value })}
+                            className="flex-fill"
+                        />
+                        <InputWrapper
+                            controlId="formDescription"
+                            type="text"
+                            placeholder="Odpowiedź"
+                            value={newTask.answer}
+                            onChange={(e) => setNewTask({ ...newTask, answer: e.target.value })}
                             className="flex-fill"
                         />
                         </div>
