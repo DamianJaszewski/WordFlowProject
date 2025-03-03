@@ -30,6 +30,11 @@ namespace WordFlowServer.Controllers
         {
             var cards = await _context.Card.ToListAsync();
 
+            if (!cards.Any())
+            {
+                return NoContent(); // 204 No Content
+            }
+
             var random = new Random();
             var output = cards.ElementAt(random.Next(cards.Count));
 

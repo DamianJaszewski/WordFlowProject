@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using NuGet.ContentModel;
+using NuGet.Versioning;
 using WordFlowServer;
 using WordFlowServer.Models;
 
@@ -28,18 +30,36 @@ namespace WordFlowTest.Controllers
         }
 
         [Fact]
-        public async Task GetRandomTask_ReturnOk()
+        public async Task GetRandomCard_ReturnOk()
         {
+            //Arrange
+            var card = new Card() { Title = "Test1", Question = "First", Answer = "Answer" };
+
+            _context.Card.Add(card);
+            _context.SaveChanges();
+
+            //Act
             var response = await _client.GetAsync("/api/Cards/Random");
 
+            //Assert
             response.EnsureSuccessStatusCode();
         }
 
         [Fact]
-        public async Task GetRandomTask_ShouldReturnCard()
+        public async Task GetRandomCard_ReturnNoContent_WhereThereIsNoCard()
+        {
+            //Act
+            var response = await _client.GetAsync("/api/Cards/Random");
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task GetRandomCard_ShouldReturnCard()
         {
             // Arrange: Dodaj kilka kart do bazy danych
-            var card1 = new Card() { Title = "", Question = "First", Answer = "Answer" };
+            var card1 = new Card() { Title = "Test1", Question = "First", Answer = "Answer" };
             var card2 = new Card() { Title = "", Question = "Second", Answer = "Answer" };
 
             _context.Card.AddRange(card1, card2);
@@ -51,6 +71,30 @@ namespace WordFlowTest.Controllers
             // Assert
             Assert.NotNull(response);
             Assert.Contains(response.Id, new[] { card1.Id, card2.Id });
+        }
+
+        [Fact]
+        public async Task PostCard_ReturnOk()
+        {
+            //Arrange: Tworzenie obiektu 
+            var newCard = new Card { Title = "Test", Question = "What is the capital of France?", Answer = "France" };
+
+            //Act
+            var response = await _client.PostAsJsonAsync("/api/Cards", newCard);
+
+            // Assert: Sprawdzenie, czy odpowiedź jest poprawna (HTTP 201 Created)
+            response.EnsureSuccessStatusCode();
+            Assert.Equal(System.Net.HttpStatusCode.Created, response.StatusCode);
+
+            // Odczytanie obiektu z odpowiedzi
+            var createdCard = await response.Content.ReadFromJsonAsync<Card>();
+            Assert.NotNull(createdCard);
+            Assert.Equal(newCard.Title, createdCard.Title);
+
+            // Sprawdzenie, czy obiekt został zapisany do bazy danych
+            var cardInDb = _context.Card.FirstOrDefault(c => c.Id == createdCard.Id);
+            Assert.NotNull(cardInDb);
+            Assert.Equal("Test", cardInDb.Title);
         }
     }
 }
