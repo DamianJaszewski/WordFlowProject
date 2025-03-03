@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@fontsource/poppins";
-/*import 'bootstrap-icons/font/bootstrap-icons.css';*/
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
