@@ -12,5 +12,6 @@ namespace WordFlowServer
 
         public DbSet<Categorie> Categories { get; set; }
         public DbSet<Card> Card { get; set; } = default!;
+        public DbSet<Repetition> Repetitions { get; set; }
     }
 }

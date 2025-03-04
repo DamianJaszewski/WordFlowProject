@@ -41,6 +41,31 @@ namespace WordFlowServer.Controllers
             return output;
         }
 
+        // Put: api/Cards/Repeat
+        [HttpPut("Repeat")]
+        public async Task<ActionResult> RepeatCard(int id, int days)
+        {
+            var card = await _context.Card.FindAsync(id);
+
+            if (card == null)
+            {
+                return NotFound();
+            }
+
+            var repetition = new Repetition
+            {
+                CardId = card.Id,
+                UpdateDate = DateTime.UtcNow,
+                NextRepetitionDate = DateTime.UtcNow.AddDays(days),
+                Days = days
+            };
+
+            card.Repetitions.Add(repetition);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
         // GET: api/Cards/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Card>> GetCard(int id)

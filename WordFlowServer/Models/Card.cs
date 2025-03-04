@@ -9,5 +9,6 @@
         public string Answer { get; set; }
 
         public Categorie? Categorie { get; set; }
+        public ICollection<Repetition> Repetitions { get; } = new List<Repetition>();
     }
 }

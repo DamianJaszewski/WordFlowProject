@@ -96,5 +96,41 @@ namespace WordFlowTest.Controllers
             Assert.NotNull(cardInDb);
             Assert.Equal("Test", cardInDb.Title);
         }
+
+        [Fact]
+        public async Task RepetitionCard_ReturnOk()
+        {
+            //Arrange: Tworzenie obiektu 
+            var newCard = new Card { Title = "Test", Question = "What is the capital of France?", Answer = "France" };
+
+            _context.Card.Add(newCard);
+            _context.SaveChanges();
+
+            var response = await _client.PutAsync($"/api/Cards/Repeat?id={newCard.Id}&days=3", null);
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+        }
+
+
+        [Fact]
+        public async Task RepetitionCard_ShouldCreateRepetition()
+        {
+            //Arrange: Tworzenie obiektu 
+            var newCard = new Card { Title = "Test", Question = "What is the capital of France?", Answer = "France" };
+
+            _context.Card.Add(newCard);
+            _context.SaveChanges();
+
+            var response = await _client.PutAsync($"/api/Cards/Repeat?id={newCard.Id}&days=3", null);
+
+            //Assert
+            response.EnsureSuccessStatusCode();
+
+            var repetition = await _context.Repetitions.FirstOrDefaultAsync(r => r.CardId == newCard.Id);
+            Assert.NotNull(repetition);
+            Assert.Equal(3, repetition.Days);
+
+        }
     }
 }
