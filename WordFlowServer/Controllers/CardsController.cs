@@ -28,7 +28,12 @@ namespace WordFlowServer.Controllers
         [HttpGet("Random")]
         public async Task<ActionResult<Card>> GetRandomCard()
         {
-            var cards = await _context.Card.ToListAsync();
+            var cards = await _context.Card
+                .Include(x => x.Repetitions)
+                .Where(card => 
+                    !card.Repetitions.Any() || //Without repetition
+                    card.Repetitions.Max(r => r.NextRepetitionDate) <= DateTime.Now)
+                .ToListAsync();
 
             if (!cards.Any())
             {

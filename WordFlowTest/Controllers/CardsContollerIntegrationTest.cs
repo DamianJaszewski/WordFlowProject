@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NuGet.ContentModel;
 using NuGet.Versioning;
+using System.Net;
 using WordFlowServer;
 using WordFlowServer.Models;
 
@@ -131,6 +132,67 @@ namespace WordFlowTest.Controllers
             Assert.NotNull(repetition);
             Assert.Equal(3, repetition.Days);
 
+        }
+
+        [Fact]
+        public async Task RandomCard_GetCardWithCorrectRepetition()
+        {
+            //Arrange: Tworzenie obiektu 
+            var newCard = new Card 
+            { 
+                Title = "Test", 
+                Question = "What is the capital of France?", 
+                Answer = "France"
+            };
+
+            var newRepetition = new Repetition 
+            { 
+                CardId = newCard.Id,
+                NextRepetitionDate = DateTime.Now,
+                UpdateDate = DateTime.Now,
+                Days = 0
+            };
+
+            newCard.Repetitions.Add(newRepetition);
+            _context.Card.Add(newCard);
+            await _context.SaveChangesAsync();
+
+            //Act: Pobierz losową kartę
+            var response = await _client.GetFromJsonAsync<Card>("/api/Cards/Random");
+
+            //Assert
+            Assert.NotNull(response);
+            Assert.Equal(response.Id, newCard.Id);
+        }
+
+        [Fact]
+        public async Task RandomCard_ReturnNoContentWhenTheCardIsOutOFRepetitionTime()
+        {
+            //Arrange: Tworzenie obiektu 
+            var newCard = new Card
+            {
+                Title = "Test",
+                Question = "What is the capital of France?",
+                Answer = "France"
+            };
+
+            var newRepetition = new Repetition
+            {
+                CardId = newCard.Id,
+                NextRepetitionDate = DateTime.UtcNow.AddDays(1),
+                UpdateDate = DateTime.UtcNow,
+                Days = 1
+            };
+
+            newCard.Repetitions.Add(newRepetition);
+            _context.Card.Add(newCard);
+            await _context.SaveChangesAsync();
+
+            //Act: Pobierz losową kartę
+            var response = await _client.GetAsync("/api/Cards/Random");
+
+            // Assert: Sprawdź czy zwraca NoContent (204)
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
     }
 }
