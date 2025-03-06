@@ -24,7 +24,10 @@ namespace WordFlowServer.Controllers
             return await _context.Card.ToListAsync();
         }
 
-        // GET: api/Cards/Random
+        /// <summary>
+        /// Gets a random card from the database.
+        /// </summary>
+        /// <returns>A random <see cref="Card"/> or <c>NoContent</c> if none are available.</returns>
         [HttpGet("Random")]
         public async Task<ActionResult<Card>> GetRandomCard()
         {
