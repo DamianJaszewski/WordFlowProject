@@ -24,9 +24,10 @@ namespace WordFlowTest
                     d => d.ServiceType ==
                         typeof(DbConnection));
 
+                var uniqueDbName = $"wordFlowTest_{Guid.NewGuid()}";
                 services.AddDbContext<DataContext>(options =>
                 {
-                    options.UseSqlServer(@"server = (localdb)\MSSQLLocalDB; database = wordFlowTest; trusted_connection = true");
+                    options.UseSqlServer($"server = (localdb)\\MSSQLLocalDB; database = {uniqueDbName}; trusted_connection = true");
                 });
             });
 
